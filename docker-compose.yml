@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  postgres_db:
+    image: postgres:15.5
+    container_name: PostgresCont
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+      POSTGRES_DB: unipd
+    ports:
+      - '5432:5432'
+    # volumes:
+    #   - postgres_db:/var/lib/postgresql/data

@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "Debug NestJS",
+        "program": "${workspaceFolder}/src/main.ts",  // Punto di ingresso dell'app NestJS
+        "preLaunchTask": "npm: build",                // Assicurati di compilare il progetto se necessario
+        "outFiles": ["${workspaceFolder}/dist/**/*.js"], // Dove vengono generati i file compilati
+        "sourceMaps": true,                           // Per il mapping tra il TypeScript e il codice JavaScript
+        "autoAttachChildProcesses": true,             // Attiva il debug per i child process
+        "console": "integratedTerminal"               // Usa il terminale integrato per vedere l'output
+      }
+    ]
+  }
+  
