@@ -319,7 +319,9 @@ let AppController = class AppController {
         this.configService = configService;
     }
     async sendEmail(data, res) {
-        const csv = Papa.unparse(data);
+        const csv = Papa.unparse(data, {
+            delimiter: ";",
+        });
         const transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
@@ -876,7 +878,7 @@ exports.HttpExceptionFilter = HttpExceptionFilter = __decorate([
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("91812ad63f277be53731")
+/******/ 		__webpack_require__.h = () => ("76f21da87aecc39a3076")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */

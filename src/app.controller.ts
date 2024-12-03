@@ -6,6 +6,7 @@ import { Response } from "express";
 import { ConfigService } from "@nestjs/config";
 import { Product } from "dto/product.dto";
 import { ApiBody } from "@nestjs/swagger";
+import { delimiter } from "path";
 
 @Controller("email")
 @UseInterceptors(ResponseInterceptor)
@@ -16,7 +17,9 @@ export class AppController {
   @ApiBody({ type: [Product] })
   async sendEmail(@Body() data: Product[], @Res() res: Response) {
     // Genera il CSV
-    const csv = Papa.unparse(data);
+    const csv = Papa.unparse(data, {
+      delimiter: ";",
+    });
 
     // Configura Nodemailer
     const transporter = nodemailer.createTransport({
