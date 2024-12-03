@@ -192,8 +192,8 @@ module.exports = function (updatedModules, renewedModules) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core_1 = __webpack_require__(4);
 const app_module_1 = __webpack_require__(5);
-const swagger_1 = __webpack_require__(23);
-const http_exception_filter_1 = __webpack_require__(24);
+const swagger_1 = __webpack_require__(17);
+const http_exception_filter_1 = __webpack_require__(27);
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.setGlobalPrefix('v1');
@@ -239,15 +239,15 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AppModule = void 0;
 const common_1 = __webpack_require__(6);
 const app_controller_1 = __webpack_require__(7);
-const app_service_1 = __webpack_require__(15);
+const app_service_1 = __webpack_require__(19);
 const response_interceptor_1 = __webpack_require__(8);
 const response_service_1 = __webpack_require__(11);
-const response_middleware_1 = __webpack_require__(16);
-const axios_1 = __webpack_require__(17);
-const platform_express_1 = __webpack_require__(18);
-const s3_service_1 = __webpack_require__(19);
-const multer_1 = __webpack_require__(22);
-const config_1 = __webpack_require__(14);
+const response_middleware_1 = __webpack_require__(20);
+const axios_1 = __webpack_require__(21);
+const platform_express_1 = __webpack_require__(22);
+const s3_service_1 = __webpack_require__(23);
+const multer_1 = __webpack_require__(26);
+const config_1 = __webpack_require__(15);
 let AppModule = class AppModule {
     configure(consumer) {
         consumer
@@ -308,14 +308,18 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AppController = void 0;
 const common_1 = __webpack_require__(6);
 const response_interceptor_1 = __webpack_require__(8);
-const nodemailer = __webpack_require__(12);
-const express_1 = __webpack_require__(13);
-const config_1 = __webpack_require__(14);
+const Papa = __webpack_require__(12);
+const nodemailer = __webpack_require__(13);
+const express_1 = __webpack_require__(14);
+const config_1 = __webpack_require__(15);
+const product_dto_1 = __webpack_require__(16);
+const swagger_1 = __webpack_require__(17);
 let AppController = class AppController {
     constructor(configService) {
         this.configService = configService;
     }
     async sendEmail(data, res) {
+        const csv = Papa.unparse(data);
         const transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
@@ -328,6 +332,12 @@ let AppController = class AppController {
             to: this.configService.get("MAIL_TO"),
             subject: "Report negozi e prodotti",
             text: "In allegato trovi il report in formato CSV.",
+            attachments: [
+                {
+                    filename: "report.csv",
+                    content: csv,
+                },
+            ],
         };
         try {
             await transporter.sendMail(mailOptions);
@@ -341,10 +351,11 @@ let AppController = class AppController {
 exports.AppController = AppController;
 __decorate([
     (0, common_1.Post)("send"),
+    (0, swagger_1.ApiBody)({ type: [product_dto_1.Product] }),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, typeof (_b = typeof express_1.Response !== "undefined" && express_1.Response) === "function" ? _b : Object]),
+    __metadata("design:paramtypes", [Array, typeof (_b = typeof express_1.Response !== "undefined" && express_1.Response) === "function" ? _b : Object]),
     __metadata("design:returntype", Promise)
 ], AppController.prototype, "sendEmail", null);
 exports.AppController = AppController = __decorate([
@@ -466,24 +477,119 @@ exports.ResponseService = ResponseService = __decorate([
 /***/ ((module) => {
 
 "use strict";
-module.exports = require("nodemailer");
+module.exports = require("papaparse");
 
 /***/ }),
 /* 13 */
 /***/ ((module) => {
 
 "use strict";
-module.exports = require("express");
+module.exports = require("nodemailer");
 
 /***/ }),
 /* 14 */
 /***/ ((module) => {
 
 "use strict";
-module.exports = require("@nestjs/config");
+module.exports = require("express");
 
 /***/ }),
 /* 15 */
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("@nestjs/config");
+
+/***/ }),
+/* 16 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Product = void 0;
+const swagger_1 = __webpack_require__(17);
+const class_validator_1 = __webpack_require__(18);
+class Product {
+}
+exports.Product = Product;
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        required: true,
+    }),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MinLength)(1),
+    __metadata("design:type", String)
+], Product.prototype, "shopName", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        required: true,
+    }),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MinLength)(1),
+    __metadata("design:type", String)
+], Product.prototype, "userCode", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        required: true,
+    }),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MinLength)(1),
+    __metadata("design:type", String)
+], Product.prototype, "code", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        required: true,
+    }),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], Product.prototype, "price", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ required: false }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MinLength)(1),
+    __metadata("design:type", String)
+], Product.prototype, "note", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        required: true,
+    }),
+    (0, class_validator_1.IsBoolean)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", Boolean)
+], Product.prototype, "inPromo", void 0);
+
+
+/***/ }),
+/* 17 */
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("@nestjs/swagger");
+
+/***/ }),
+/* 18 */
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("class-validator");
+
+/***/ }),
+/* 19 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -511,7 +617,7 @@ exports.AppService = AppService = __decorate([
 
 
 /***/ }),
-/* 16 */
+/* 20 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -554,21 +660,21 @@ exports.ResponseMiddleware = ResponseMiddleware = __decorate([
 
 
 /***/ }),
-/* 17 */
+/* 21 */
 /***/ ((module) => {
 
 "use strict";
 module.exports = require("@nestjs/axios");
 
 /***/ }),
-/* 18 */
+/* 22 */
 /***/ ((module) => {
 
 "use strict";
 module.exports = require("@nestjs/platform-express");
 
 /***/ }),
-/* 19 */
+/* 23 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -586,9 +692,9 @@ var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.S3Service = void 0;
 const common_1 = __webpack_require__(6);
-const AWS = __webpack_require__(20);
-const uuid_1 = __webpack_require__(21);
-const config_1 = __webpack_require__(14);
+const AWS = __webpack_require__(24);
+const uuid_1 = __webpack_require__(25);
+const config_1 = __webpack_require__(15);
 let S3Service = class S3Service {
     constructor(configService) {
         this.configService = configService;
@@ -636,35 +742,28 @@ exports.S3Service = S3Service = __decorate([
 
 
 /***/ }),
-/* 20 */
+/* 24 */
 /***/ ((module) => {
 
 "use strict";
 module.exports = require("aws-sdk");
 
 /***/ }),
-/* 21 */
+/* 25 */
 /***/ ((module) => {
 
 "use strict";
 module.exports = require("uuid");
 
 /***/ }),
-/* 22 */
+/* 26 */
 /***/ ((module) => {
 
 "use strict";
 module.exports = require("multer");
 
 /***/ }),
-/* 23 */
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("@nestjs/swagger");
-
-/***/ }),
-/* 24 */
+/* 27 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -777,7 +876,7 @@ exports.HttpExceptionFilter = HttpExceptionFilter = __decorate([
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("8a080e9effa9b4a7bc8b")
+/******/ 		__webpack_require__.h = () => ("91812ad63f277be53731")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
