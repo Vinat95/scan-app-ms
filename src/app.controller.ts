@@ -34,6 +34,7 @@ export class AppController {
     const mailOptions = {
       from: this.configService.get<string>("MAIL_FROM"),
       to: this.configService.get<string>("MAIL_TO"),
+      cc:this.configService.get<string>("MAIL_CC"),
       subject: "Report negozi e prodotti",
       text: "In allegato trovi il report in formato CSV.",
       attachments: [
