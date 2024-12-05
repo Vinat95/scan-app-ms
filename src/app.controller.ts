@@ -43,7 +43,7 @@ export class AppController {
       from: this.configService.get<string>("MAIL_FROM"),
       to: this.configService.get<string>("MAIL_TO"),
       cc: this.configService.get<string>("MAIL_CC"),
-      subject: "Report negozi e prodotti",
+      subject: `Articoli rilevati da ${data[0].userCode} il ${data[0].date.split(",")[0]}`,
       text: "In allegato trovi il report in formato CSV.",
       attachments: [
         {

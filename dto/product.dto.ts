@@ -31,7 +31,7 @@ export class Product {
   @IsNotEmpty()
   @IsString()
   @MinLength(1)
-  code: string;
+  ean: string;
 
   @ApiProperty({
     required: true,
@@ -52,4 +52,10 @@ export class Product {
   @IsBoolean()
   @IsNotEmpty()
   inPromo: boolean;
+
+  @ApiProperty({ required: true })
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
+  date: string;
 }
