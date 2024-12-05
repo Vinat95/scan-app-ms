@@ -1,4 +1,12 @@
-import { Body, Controller, Post, UseInterceptors, Res } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Post,
+  UseInterceptors,
+  Res,
+  UsePipes,
+  ValidationPipe,
+} from "@nestjs/common";
 import { ResponseInterceptor } from "response/response.interceptor";
 import * as Papa from "papaparse";
 import * as nodemailer from "nodemailer";
@@ -6,7 +14,6 @@ import { Response } from "express";
 import { ConfigService } from "@nestjs/config";
 import { Product } from "dto/product.dto";
 import { ApiBody } from "@nestjs/swagger";
-import { delimiter } from "path";
 
 @Controller("email")
 @UseInterceptors(ResponseInterceptor)
@@ -15,6 +22,7 @@ export class AppController {
 
   @Post("send")
   @ApiBody({ type: [Product] })
+  @UsePipes(new ValidationPipe({ whitelist: true }))
   async sendEmail(@Body() data: Product[], @Res() res: Response) {
     // Genera il CSV
     const csv = Papa.unparse(data, {
@@ -34,7 +42,7 @@ export class AppController {
     const mailOptions = {
       from: this.configService.get<string>("MAIL_FROM"),
       to: this.configService.get<string>("MAIL_TO"),
-      cc:this.configService.get<string>("MAIL_CC"),
+      cc: this.configService.get<string>("MAIL_CC"),
       subject: "Report negozi e prodotti",
       text: "In allegato trovi il report in formato CSV.",
       attachments: [
