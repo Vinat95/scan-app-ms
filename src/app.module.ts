@@ -1,4 +1,9 @@
-import { MiddlewareConsumer, Module, RequestMethod } from "@nestjs/common";
+import {
+  MiddlewareConsumer,
+  Module,
+  RequestMethod,
+  ValidationPipe,
+} from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { ResponseInterceptor } from "response/response.interceptor";
@@ -9,6 +14,7 @@ import { MulterModule } from "@nestjs/platform-express";
 import { S3Service } from "./aws s3/s3.service";
 import { memoryStorage } from "multer";
 import { ConfigModule } from "@nestjs/config";
+import { APP_PIPE } from "@nestjs/core";
 
 @Module({
   imports: [
@@ -26,6 +32,10 @@ import { ConfigModule } from "@nestjs/config";
     ResponseService,
     ResponseInterceptor,
     S3Service,
+    {
+      provide: APP_PIPE,
+      useClass: ValidationPipe,
+    },
   ],
 })
 export class AppModule {

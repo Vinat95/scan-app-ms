@@ -1,11 +1,13 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
-  IsString,
-  IsNotEmpty,
-  MinLength,
-  IsNumber,
   IsBoolean,
+  IsNotEmpty,
+  IsNumber,
   IsOptional,
+  IsString,
+  Length,
+  Min,
+  MinLength,
 } from "class-validator";
 
 export class Product {
@@ -14,7 +16,7 @@ export class Product {
   })
   @IsNotEmpty()
   @IsString()
-  @MinLength(1)
+  @Length(1, 50) // Lunghezza minima e massima del nome negozio
   shopName: string;
 
   @ApiProperty({
@@ -22,7 +24,7 @@ export class Product {
   })
   @IsNotEmpty()
   @IsString()
-  @MinLength(1)
+  @Length(1, 20) // Lunghezza minima e massima del codice utente
   userCode: string;
 
   @ApiProperty({
@@ -30,7 +32,7 @@ export class Product {
   })
   @IsNotEmpty()
   @IsString()
-  @MinLength(1)
+  @Length(13, 13) // Lunghezza esatta dell'EAN
   ean: string;
 
   @ApiProperty({
@@ -38,23 +40,26 @@ export class Product {
   })
   @IsNotEmpty()
   @IsNumber()
+  @Min(0) // Prezzo deve essere maggiore o uguale a 0
   price: number;
 
-  @ApiProperty({ required: false })
-  @IsOptional()
+  @ApiProperty()
+  @IsOptional() // Note possono essere opzionali
   @IsString()
-  @MinLength(1)
-  note: string;
+  @Length(0, 255) // Lunghezza massima per le note
+  note?: string;
 
   @ApiProperty({
     required: true,
   })
-  @IsBoolean()
   @IsNotEmpty()
+  @IsBoolean()
   inPromo: boolean;
 
-  @ApiProperty({ required: true })
-  @IsOptional()
+  @ApiProperty({
+    required: true,
+  })
+  @IsNotEmpty()
   @IsString()
   @MinLength(1)
   date: string;
