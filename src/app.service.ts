@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import * as Papa from "papaparse";
 import * as nodemailer from "nodemailer";
-import { Product } from "dto/product.dto";
+import { Product } from "./dto/product.dto";
 import { ConfigService } from "@nestjs/config";
 
 @Injectable()

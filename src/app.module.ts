@@ -1,11 +1,10 @@
 import { MiddlewareConsumer, Module, RequestMethod } from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
-import { ResponseInterceptor } from "response/response.interceptor";
-import { ResponseService } from "response/response.service";
-import { ResponseMiddleware } from "response/response.middleware";
+import { ResponseInterceptor } from "./response/response.interceptor";
+import { ResponseService } from "./response/response.service";
+import { ResponseMiddleware } from "./response/response.middleware";
 import { HttpModule } from "@nestjs/axios";
-import { S3Service } from "./aws s3/s3.service";
 import { ConfigModule } from "@nestjs/config";
 
 @Module({
@@ -16,7 +15,7 @@ import { ConfigModule } from "@nestjs/config";
     }),
   ],
   controllers: [AppController],
-  providers: [AppService, ResponseService, ResponseInterceptor, S3Service],
+  providers: [AppService, ResponseService, ResponseInterceptor],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {

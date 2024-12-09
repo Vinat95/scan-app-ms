@@ -6,8 +6,8 @@ import {
   UsePipes,
   ValidationPipe,
 } from "@nestjs/common";
-import { ResponseInterceptor } from "response/response.interceptor";
-import { Products } from "dto/product.dto";
+import { ResponseInterceptor } from "./response/response.interceptor";
+import { Products } from "./dto/product.dto";
 import { AppService } from "./app.service";
 
 @Controller("email")
