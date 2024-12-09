@@ -2,6 +2,8 @@ import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { HttpExceptionFilter } from "./http-exception.filter";
+import serveStatic from 'serve-static';
+import * as path from 'path';
 
 declare const module: any;
 
@@ -18,7 +20,7 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup("swagger", app, document);
-  app.use('/favicon.ico', (req, res) => res.status(204).send());
+  app.use(serveStatic(path.join(__dirname, 'public')));
   app.enableCors();
   await app.listen(3000);
 
