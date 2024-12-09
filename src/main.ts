@@ -20,7 +20,11 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup("swagger", app, document);
-  app.use(serveStatic(path.join(__dirname, 'public')));
+  app.use(serveStatic(path.join(__dirname,'..', 'public')));
+
+  app.use('/favicon.ico', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'favicon.ico'));
+  });
   app.enableCors();
   await app.listen(3000);
 
