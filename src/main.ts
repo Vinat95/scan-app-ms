@@ -18,6 +18,7 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup("swagger", app, document);
+  app.use('/favicon.ico', (req, res) => res.status(204).send());
   app.enableCors();
   await app.listen(3000);
 
