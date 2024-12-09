@@ -1,5 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Type } from "class-transformer";
 import {
+  IsArray,
   IsBoolean,
   IsNotEmpty,
   IsNumber,
@@ -8,6 +10,7 @@ import {
   Length,
   Min,
   MinLength,
+  ValidateNested,
 } from "class-validator";
 
 export class Product {
@@ -16,7 +19,7 @@ export class Product {
   })
   @IsNotEmpty()
   @IsString()
-  @Length(1, 50) // Lunghezza minima e massima del nome negozio
+  @MinLength(1)
   shopName: string;
 
   @ApiProperty({
@@ -24,7 +27,7 @@ export class Product {
   })
   @IsNotEmpty()
   @IsString()
-  @Length(1, 20) // Lunghezza minima e massima del codice utente
+  @MinLength(1)
   userCode: string;
 
   @ApiProperty({
@@ -63,4 +66,11 @@ export class Product {
   @IsString()
   @MinLength(1)
   date: string;
+}
+export class Products {
+  @ApiProperty({ type: [Product], description: "Lista di prodotti" })
+  @IsArray()
+  @ValidateNested({ each: true }) // Assicura che ogni elemento nell'array sia validato come un Product
+  @Type(() => Product) // Applica la trasformazione per ogni elemento dell'array
+  products: Product[];
 }

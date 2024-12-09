@@ -9,9 +9,6 @@ declare const module: any;
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix("v1");
-  app.useGlobalPipes(
-    new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })
-  );
   app.useGlobalFilters(new HttpExceptionFilter());
 
   const config = new DocumentBuilder()
