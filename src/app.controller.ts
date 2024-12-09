@@ -24,8 +24,19 @@ export class AppController {
   @ApiBody({ type: [Product] })
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async sendEmail(@Body() data: Product[], @Res() res: Response) {
+    const transformedData = data.map((item) => {
+      return {
+        "Nome Negozio": item.shopName,
+        "Codice Utente": item.userCode,
+        EAN: item.ean,
+        Prezzo: item.price.toFixed(2).replace(".", ",") + " €", // Formatta il prezzo
+        Note: item.note,
+        "In Promo": item.inPromo ? "Sì" : "No",
+        Data: item.date
+      };
+    });
     // Genera il CSV
-    const csv = Papa.unparse(data, {
+    const csv = Papa.unparse(transformedData, {
       delimiter: ";",
     });
 
