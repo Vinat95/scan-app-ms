@@ -6,7 +6,6 @@ import { ResponseService } from "./response/response.service";
 import { ResponseMiddleware } from "./response/response.middleware";
 import { HttpModule } from "@nestjs/axios";
 import { ConfigModule } from "@nestjs/config";
-import { join } from 'path';
 
 @Module({
   imports: [
