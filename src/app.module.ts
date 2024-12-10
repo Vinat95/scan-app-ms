@@ -6,15 +6,11 @@ import { ResponseService } from "./response/response.service";
 import { ResponseMiddleware } from "./response/response.middleware";
 import { HttpModule } from "@nestjs/axios";
 import { ConfigModule } from "@nestjs/config";
-import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 
 @Module({
   imports: [
     HttpModule,
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'public'), // Cartella dei file statici
-    }),
     ConfigModule.forRoot({
       isGlobal: true, // Imposta le variabili d'ambiente come globali
     }),
