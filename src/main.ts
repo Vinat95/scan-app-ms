@@ -2,8 +2,6 @@ import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { HttpExceptionFilter } from "./http-exception.filter";
-import { join } from 'path';
-import * as serveStatic from 'serve-static'; 
 
 declare const module: any;
 
@@ -20,7 +18,6 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup("swagger", app, document);
-  app.use(serveStatic(join(__dirname, '..', 'public'))); 
   app.enableCors();
   await app.listen(process.env.PORT || 3000);
 
