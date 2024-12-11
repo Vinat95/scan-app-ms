@@ -15,7 +15,7 @@ export class AppService {
           "Nome Negozio": item.shopName,
           "Codice Utente": item.userCode,
           EAN: item.ean,
-          Prezzo: item.price.toFixed(2).replace(".", ",") + " €",
+          Prezzo: item.price.toFixed(2).replace(".", ","),
           Note: item.note,
           "In Promo": item.inPromo ? "Sì" : "No",
           Data: item.date,
