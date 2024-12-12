@@ -17,7 +17,7 @@ export class AppService {
           EAN: item.ean,
           Prezzo: item.price.toFixed(2).replace(".", ","),
           Note: item.note,
-          "In Promo": item.inPromo ? "Sì" : "No",
+          "In Promo": item.inPromo ? "Si" : "No",
           Data: item.date,
         };
       });
