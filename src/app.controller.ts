@@ -8,16 +8,16 @@ import {
 } from "@nestjs/common";
 import { ResponseInterceptor } from "./response/response.interceptor";
 import { Products } from "./dto/product.dto";
-import { AppService } from "./app.service";
+import { EmailService } from "./services/email.service";
 
 @Controller("email")
 @UseInterceptors(ResponseInterceptor)
 export class AppController {
-  constructor(private appService: AppService) {}
+  constructor(private emailService: EmailService) {}
 
   @Post("send")
   @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
   async sendEmail(@Body() data: Products) {
-    return this.appService.sendEmail(data.products);
+    return this.emailService.send(data.products);
   }
 }
