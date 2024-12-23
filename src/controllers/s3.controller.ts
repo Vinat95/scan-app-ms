@@ -5,10 +5,11 @@ import {
   InternalServerErrorException,
   Param,
   Post,
-  UploadedFile,
+  UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
+import { FileFieldsInterceptor } from "@nestjs/platform-express";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiBody, ApiConsumes, ApiResponse } from "@nestjs/swagger";
 import { JwtAuthGuard } from "src/auth.guard";
@@ -19,7 +20,11 @@ export class UploadController {
   constructor(private readonly s3Service: S3Service) {}
 
   @Post("upload")
-  @UseInterceptors(FileInterceptor("file"))
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: "files", maxCount: 3 }, // Massimo 3 file
+    ])
+  )
   @ApiConsumes("multipart/form-data")
   @ApiBody({
     description: "File to upload",
@@ -27,36 +32,39 @@ export class UploadController {
     schema: {
       type: "object",
       properties: {
-        file: {
-          type: "string",
-          format: "binary",
+        files: {
+          type: "array",
+          items: {
+            type: "string",
+            format: "binary",
+          },
         },
       },
     },
   })
   @ApiResponse({
     status: 201,
-    description: "File successfully uploaded",
+    description: "Files successfully uploaded",
     schema: {
       type: "object",
       properties: {
         message: { type: "string" },
-        url: { type: "string" },
+        urls: { type: "array", items: { type: "string" } },
       },
     },
   })
-  async uploadFile(@UploadedFile() file: Express.Multer.File) {
+  async uploadFile(@UploadedFiles() files: { files?: Express.Multer.File[] }) {
     let result;
-    if (file) {
-      if (file.mimetype !== "image/jpeg") {
+    if (files?.files && files.files.length > 0) {
+      if (files.files.some((file) => file.mimetype !== "image/jpeg")) {
         throw new BadRequestException("Solo i file JPEG sono consentiti");
       }
-      if (file.size > 100 * 1024) {
+      if (files.files.some((file) => file.size > 100 * 1024)) {
         throw new BadRequestException("Il file supera i 100Kb");
       }
       // Caricamento del file su S3
       try {
-        result = await this.s3Service.uploadImage(file);
+        result = await this.s3Service.uploadImages(files.files);
       } catch (error) {
         // Gestione dell'errore di caricamento
         throw new BadRequestException("Errore durante il caricamento del file");
@@ -64,8 +72,8 @@ export class UploadController {
     }
 
     return {
-      message: "File uploaded successfully",
-      url: result ? result.Location : "", // URL dell'immagine caricata
+      message: "Files uploaded successfully",
+      urls: result ? result.map((item) => item.Location) : [], // URL dell'immagine caricata
     };
   }
 

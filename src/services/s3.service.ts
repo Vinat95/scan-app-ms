@@ -25,18 +25,22 @@ export class S3Service {
     });
   }
 
-  async uploadImage(file: Express.Multer.File): Promise<any> {
-    const key = `${uuid()}-${file.originalname}`; // Genera un nome univoco per il file
+  async uploadImages(files: Express.Multer.File[]): Promise<any[]> {
+    const uploadPromises = files.map((file) => {
+      const key = `${uuid()}-${file.originalname}`; // Genera un nome univoco per il file
+  
+      const params = {
+        Bucket: this.awsBucketName,
+        Key: key,
+        Body: file.buffer,
+        ContentType: file.mimetype,
+        ACL: "public-read",
+      };
+  
+      return this.s3.upload(params).promise();
+    });
 
-    const params = {
-      Bucket: this.awsBucketName,
-      Key: key,
-      Body: file.buffer,
-      ContentType: file.mimetype,
-      ACL: "public-read",
-    };
-
-    const data = await this.s3.upload(params).promise();
+    const data = await Promise.all(uploadPromises);
     return data;
   }
 
