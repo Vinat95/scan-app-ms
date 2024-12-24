@@ -18,7 +18,8 @@ export class EmailService {
           Prezzo: item.price.toFixed(2).replace(".", ","),
           Note: item.note,
           "In Promo": item.inPromo ? "Si" : "No",
-          Data: item.date,
+          Data: item.date.split(', ')[0],
+          Ora: item.date.split(', ')[1],
           Foto: item.photos,
         };
       });
