@@ -19,6 +19,7 @@ export class EmailService {
           Note: item.note,
           "In Promo": item.inPromo ? "Si" : "No",
           Data: item.date,
+          Foto: item.photos,
         };
       });
 

@@ -69,9 +69,8 @@ export class Product {
 
   @ApiProperty({ type: [String], description: "Lista di url delle foto" })
   @IsArray()
-  @ValidateNested({ each: true }) // Assicura che ogni elemento nell'array sia validato come un Product
   @Type(() => String) // Applica la trasformazione per ogni elemento dell'array
-  products: String[];
+  photos: String[];
 }
 export class Products {
   @ApiProperty({ type: [Product], description: "Lista di prodotti" })
