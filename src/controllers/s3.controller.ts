@@ -59,9 +59,9 @@ export class UploadController {
       if (files.files.some((file) => file.mimetype !== "image/jpeg")) {
         throw new BadRequestException("Solo i file JPEG sono consentiti");
       }
-      if (files.files.some((file) => file.size > 100 * 1024)) {
-        throw new BadRequestException("Il file supera i 100Kb");
-      }
+      // if (files.files.some((file) => file.size > 100 * 1024)) {
+      //   throw new BadRequestException("Il file supera i 100Kb");
+      // }
       // Caricamento del file su S3
       try {
         result = await this.s3Service.uploadImages(files.files);
