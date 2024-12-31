@@ -23,6 +23,14 @@ export class EmailService {
           Foto1: item.photos[0] ?? "",
           Foto2: item.photos[1] ?? "",
           Foto3: item.photos[2] ?? "",
+          L1: "",
+          L2: "",
+          L3: "",
+          L4: "",
+          L5: "",
+          L6: "000000",
+          L7: "",
+          L8: "",
         };
       });
 
