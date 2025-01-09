@@ -27,7 +27,7 @@ export class S3Service {
 
   async uploadImages(files: Express.Multer.File[]): Promise<any[]> {
     const uploadPromises = files.map((file) => {
-      const key = `${uuid()}-${file.originalname}`; // Genera un nome univoco per il file
+      const key = `${file.originalname}`; // Genera un nome univoco per il file
   
       const params = {
         Bucket: this.awsBucketName,

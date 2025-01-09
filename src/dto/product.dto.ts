@@ -66,6 +66,11 @@ export class Product {
   @IsString()
   @MinLength(1)
   date: string;
+
+  @ApiProperty({ type: [String], description: "Lista di url delle foto" })
+  @IsArray()
+  @Type(() => String) // Applica la trasformazione per ogni elemento dell'array
+  photos: String[];
 }
 export class Products {
   @ApiProperty({ type: [Product], description: "Lista di prodotti" })
