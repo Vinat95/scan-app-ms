@@ -13,6 +13,7 @@ export class EmailService {
       const transformedData = data.map((item) => {
         return {
           "Nome Negozio": item.shopName,
+          "Localita\'": item.location,
           "Codice Utente": item.userCode,
           EAN: item.ean,
           Prezzo: item.price.toFixed(2).replace(".", ","),

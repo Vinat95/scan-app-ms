@@ -22,6 +22,12 @@ export class Product {
   @MinLength(1)
   shopName: string;
 
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  @Length(0, 255)
+  location: string;
+
   @ApiProperty({
     required: true,
   })
