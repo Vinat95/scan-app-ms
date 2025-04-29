@@ -3,9 +3,12 @@ import * as Papa from "papaparse";
 import * as nodemailer from "nodemailer";
 import { Product } from "../dto/product.dto";
 import { ConfigService } from "@nestjs/config";
+import axios from "axios";
+import { GptDto } from "src/dto/gpt.dto";
 
 @Injectable()
 export class EmailService {
+  private readonly apiKeyGPT = this.configService.get<string>("GPT_API_KEY");
   constructor(private configService: ConfigService) {}
 
   async send(data: Product[]) {
@@ -71,6 +74,31 @@ export class EmailService {
       });
     } catch (error) {
       throw error; // Rilancia l'errore per gestirlo in altri livelli
+    }
+  }
+
+  async askChatGPT(data: GptDto): Promise<string> {
+    try {
+      console.log("Invio richiesta a OpenAI:", JSON.stringify(data, null, 2)); // Debug
+
+      const response = await axios.post(
+        "https://api.openai.com/v1/chat/completions",
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${this.apiKeyGPT}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      return response.data.choices[0].message.content;
+    } catch (error) {
+      console.error(
+        "Errore API OpenAI:",
+        error.response?.data || error.message
+      );
+      throw new Error("Errore durante la comunicazione con OpenAI");
     }
   }
 }
