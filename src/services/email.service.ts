@@ -45,7 +45,9 @@ export class EmailService {
 
       // Configura Nodemailer
       const transporter = nodemailer.createTransport({
-        service: "gmail", // Usa il tuo provider
+        host: "smtp.aruba.it",
+        port: 465,
+        secure: true,
         auth: {
           user: this.configService.get<string>("MAIL_FROM"),
           pass: this.configService.get<string>("PROVIDER_PW"),
